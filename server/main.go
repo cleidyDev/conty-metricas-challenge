@@ -1,14 +1,15 @@
 package main
 
 import (
+	"log/slog"
+	"net/http"
+	"os"
+
 	"conty-challenge/internal/clock"
 	"conty-challenge/internal/httpapi"
 	"conty-challenge/internal/provider"
 	"conty-challenge/internal/store"
 	"conty-challenge/internal/syncer"
-	"log/slog"
-	"net/http"
-	"os"
 )
 
 func main() {

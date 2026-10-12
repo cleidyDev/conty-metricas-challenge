@@ -2,15 +2,16 @@ package syncer
 
 import (
 	"context"
-	"conty-challenge/internal/clock"
-	"conty-challenge/internal/domain"
-	"conty-challenge/internal/provider"
-	"conty-challenge/internal/store"
 	"log/slog"
 	"os"
 	"sync"
 	"testing"
 	"time"
+
+	"conty-challenge/internal/clock"
+	"conty-challenge/internal/domain"
+	"conty-challenge/internal/provider"
+	"conty-challenge/internal/store"
 )
 
 // ============================================================================

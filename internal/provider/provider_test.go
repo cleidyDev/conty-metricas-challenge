@@ -2,10 +2,11 @@ package provider
 
 import (
 	"context"
-	"conty-challenge/internal/domain"
 	"sync"
 	"testing"
 	"time"
+
+	"conty-challenge/internal/domain"
 )
 
 var (

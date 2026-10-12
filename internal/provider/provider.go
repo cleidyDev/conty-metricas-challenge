@@ -2,9 +2,10 @@ package provider
 
 import (
 	"context"
-	"conty-challenge/internal/domain"
 	"sync"
 	"time"
+
+	"conty-challenge/internal/domain"
 )
 
 type MetricsProvider interface {

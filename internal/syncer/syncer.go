@@ -2,10 +2,6 @@ package syncer
 
 import (
 	"context"
-	"conty-challenge/internal/clock"
-	"conty-challenge/internal/domain"
-	"conty-challenge/internal/provider"
-	"conty-challenge/internal/store"
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
@@ -13,6 +9,11 @@ import (
 	"log/slog"
 	"sort"
 	"time"
+
+	"conty-challenge/internal/clock"
+	"conty-challenge/internal/domain"
+	"conty-challenge/internal/provider"
+	"conty-challenge/internal/store"
 )
 
 type Config struct {

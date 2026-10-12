@@ -2,12 +2,13 @@ package store
 
 import (
 	"bytes"
-	"conty-challenge/internal/domain"
 	"log/slog"
 	"strings"
 	"sync"
 	"testing"
 	"time"
+
+	"conty-challenge/internal/domain"
 )
 
 var (

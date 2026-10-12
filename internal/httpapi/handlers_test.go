@@ -2,11 +2,6 @@ package httpapi
 
 import (
 	"bytes"
-	"conty-challenge/internal/clock"
-	"conty-challenge/internal/domain"
-	"conty-challenge/internal/provider"
-	"conty-challenge/internal/store"
-	"conty-challenge/internal/syncer"
 	"encoding/json"
 	"io"
 	"log/slog"
@@ -15,6 +10,12 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"conty-challenge/internal/clock"
+	"conty-challenge/internal/domain"
+	"conty-challenge/internal/provider"
+	"conty-challenge/internal/store"
+	"conty-challenge/internal/syncer"
 )
 
 func setupHandler() (*Handler, *provider.FakeProvider, *store.MemoryStore, *clock.FakeClock) {

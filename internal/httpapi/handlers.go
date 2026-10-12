@@ -1,13 +1,14 @@
 package httpapi
 
 import (
-	"conty-challenge/internal/domain"
-	"conty-challenge/internal/store"
-	"conty-challenge/internal/syncer"
 	"encoding/json"
 	"io"
 	"log/slog"
 	"net/http"
+
+	"conty-challenge/internal/domain"
+	"conty-challenge/internal/store"
+	"conty-challenge/internal/syncer"
 )
 
 type Handler struct {

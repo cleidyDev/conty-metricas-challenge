@@ -1,11 +1,12 @@
 package store
 
 import (
-	"conty-challenge/internal/domain"
 	"log/slog"
 	"sort"
 	"sync"
 	"time"
+
+	"conty-challenge/internal/domain"
 )
 
 type Row struct {

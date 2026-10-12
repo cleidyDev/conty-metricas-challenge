@@ -8,7 +8,6 @@ import (
 	"time"
 )
 
-// Row representa uma linha armazenada para um post
 type Row struct {
 	Snapshot      domain.Snapshot
 	Metrics       domain.Metrics
@@ -37,7 +36,6 @@ func (s *MemoryStore) Upsert(key domain.Key, snapshot domain.Snapshot, metrics d
 
 	switch {
 	case !exists:
-		// Nova linha - inserir
 		s.rows[key] = Row{
 			Snapshot:      snapshot,
 			Metrics:       metrics,
@@ -65,8 +63,8 @@ func (s *MemoryStore) Upsert(key domain.Key, snapshot domain.Snapshot, metrics d
 			s.rows[key] = Row{
 				Snapshot:      cur.Snapshot,
 				Metrics:       cur.Metrics,
-				FetchedAt:     cur.FetchedAt, // mantém o fetchedAt original
-				LastCheckedAt: fetchedAt,     // atualiza LastCheckedAt
+				FetchedAt:     cur.FetchedAt,
+				LastCheckedAt: fetchedAt, // atualiza LastCheckedA
 			}
 			return domain.Unchanged, false
 		}

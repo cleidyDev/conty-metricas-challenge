@@ -1,4 +1,4 @@
-package appi
+package api
 
 import (
 	"conty-challenge/internal/domain"

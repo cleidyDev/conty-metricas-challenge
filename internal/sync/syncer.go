@@ -6,13 +6,13 @@ import (
 	"conty-challenge/internal/domain"
 	"conty-challenge/internal/provider"
 	"conty-challenge/internal/store"
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"log/slog"
 	"sort"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Config struct {
@@ -61,7 +61,9 @@ func (s *SyncService) Sync(ctx context.Context, conn domain.Connection, window d
 	if err := ctx.Err(); err != nil {
 		return domain.SyncResult{}, err
 	}
-	syncID := uuid.New().String()
+	// syncId único por execução, sem depender de pacote externo:
+	// 16 bytes do crypto/rand em hexadecimal.
+	syncID := newSyncID()
 	startedAt := s.clock.Now()
 	if window.From.After(window.To) {
 		return domain.SyncResult{}, fmt.Errorf("invalid window: from must not be after to")
@@ -277,6 +279,17 @@ func (s *SyncService) warn(msg string, args ...any) {
 	if s.logger != nil {
 		s.logger.Warn(msg, args...)
 	}
+}
+
+// newSyncID gera um identificador único por execução da sincronização.
+// Usa crypto/rand para não depender de pacote externo nem de relógio.
+func newSyncID() string {
+	var buf [16]byte
+	if _, err := rand.Read(buf[:]); err != nil {
+		// Extremamente improvável: em último caso cai para tempo + contador.
+		return fmt.Sprintf("fallback-%d", time.Now().UnixNano())
+	}
+	return hex.EncodeToString(buf[:])
 }
 
 func (s *SyncService) calculateBackoff(attempt int) time.Duration {

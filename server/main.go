@@ -1,7 +1,7 @@
 package main
 
 import (
-	appi "conty-challenge/internal/api"
+	"conty-challenge/internal/api"
 	"conty-challenge/internal/clock"
 	"conty-challenge/internal/provider"
 	"conty-challenge/internal/store"
@@ -13,7 +13,7 @@ import (
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	addr := "8080"
+	addr := ":8081"
 
 	clk := clock.NewSystemClock()
 	stores := store.NewMemoryStore(logger)
@@ -21,11 +21,11 @@ func main() {
 	config := syncer.DefaultConfig()
 
 	syncSv := syncer.NewSyncService(providers, stores, clk, config, logger)
-	handler := appi.NewHandler(syncSv, stores, logger)
+	handler := api.NewHandler(syncSv, stores, logger)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /sync", handler.SyncHandler)
-	mux.HandleFunc("GET /metrics/{plataform}/{accountId}", handler.MetricsHandler)
+	mux.HandleFunc("GET /metrics/{platform}/{accountId}", handler.MetricsHandler)
 
 	logger.Info("server starting on", "addr", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {

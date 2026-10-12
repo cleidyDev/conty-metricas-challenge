@@ -1,0 +1,67 @@
+name: Testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissões mínimas: o workflow só precisa de ler o repositório.
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    name: Testes (Go ${{ matrix.go }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Se uma versão falhar, não vale a pena testar as restantes.
+      fail-fast: false
+      matrix:
+        # 1.22 é o mínimo declarado no go.mod; 1.23 confirma que não há
+        # dependência de uma versão específica.
+        go: ['1.22', '1.23']
+
+    steps:
+      - name: Obter o código
+        uses: actions/checkout@v7
+
+      - name: Instalar Go ${{ matrix.go }}
+        uses: actions/setup-go@v7
+        with:
+          go-version: ${{ matrix.go }}
+          cache: true
+
+      - name: Verificar formatação
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::Ficheiros sem gofmt:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: Testes com deteção de races
+        run: go test -race ./...
+
+      - name: Cobertura
+        run: go test -cover ./...
+
+  build:
+    name: Compilar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version: '1.22'
+          cache: true
+
+      - name: Compilar
+        run: go build ./...

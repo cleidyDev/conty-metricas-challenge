@@ -1,5 +1,7 @@
 # Conty Sync — Serviço de Sincronização de Métricas
 
+![Testes](https://github.com/cleidyDev/conty-metricas-challenge/actions/workflows/testes.yml/badge.svg)
+
 Serviço em Go que recebe uma conexão já autorizada (o token pode ser fictício) e
 sincroniza as métricas de posts de redes sociais. O foco é sobreviver a
 timeout, resposta duplicada e limite de taxa do provedor, sem nunca contar o
@@ -203,7 +205,21 @@ go test -run TestUpsert -v ./internal/store/   # um teste só
 | `httpapi` | 11 | Contratos 200/502/400 e rotas Go 1.22 no `ServeMux` real |
 
 `server` fica a 0% por ser só wiring (monta as dependências e sobe o `ServeMux`);
-esse mesmo wiring é exercitado nos testes do `api`.
+esse mesmo wiring é exercitado nos testes do `httpapi`.
+
+### Testes automáticos
+
+O workflow `.github/workflows/testes.yml` corre em cada push para `main` e em
+cada pull request. Para cada versão da matrix (Go 1.22, a mínima do `go.mod`, e
+1.23) verifica:
+
+1. `gofmt` — falha e mostra os ficheiros se algum não estiver formatado
+2. `go vet`
+3. `go test -race ./...`
+4. `go test -cover ./...`
+
+Um segundo job faz apenas `go build ./...`. O badge no topo deste README mostra
+o estado da última execução.
 
 ## Limitações conhecidas
 

@@ -1,4 +1,4 @@
-package api
+package httpapi
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"conty-challenge/internal/domain"
 	"conty-challenge/internal/provider"
 	"conty-challenge/internal/store"
-	"conty-challenge/internal/sync"
+	"conty-challenge/internal/syncer"
 	"encoding/json"
 	"io"
 	"log/slog"

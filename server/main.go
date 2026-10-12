@@ -1,11 +1,11 @@
 package main
 
 import (
-	"conty-challenge/internal/api"
 	"conty-challenge/internal/clock"
+	"conty-challenge/internal/httpapi"
 	"conty-challenge/internal/provider"
 	"conty-challenge/internal/store"
-	syncer "conty-challenge/internal/sync"
+	"conty-challenge/internal/syncer"
 	"log/slog"
 	"net/http"
 	"os"
@@ -21,7 +21,7 @@ func main() {
 	config := syncer.DefaultConfig()
 
 	syncSv := syncer.NewSyncService(providers, stores, clk, config, logger)
-	handler := api.NewHandler(syncSv, stores, logger)
+	handler := httpapi.NewHandler(syncSv, stores, logger)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /sync", handler.SyncHandler)

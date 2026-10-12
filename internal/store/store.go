@@ -12,7 +12,7 @@ type Row struct {
 	Snapshot      domain.Snapshot
 	Metrics       domain.Metrics
 	FetchedAt     time.Time // quando o valor atual foi obtido (muda só em inserted/updated)
-	LastCheckedAt time.Time // última vez que o serviço verificou o post (atualizado também em unchanged
+	LastCheckedAt time.Time // última vez que o serviço verificou o post (atualizado também em unchanged)
 }
 
 type MemoryStore struct {
@@ -64,7 +64,7 @@ func (s *MemoryStore) Upsert(key domain.Key, snapshot domain.Snapshot, metrics d
 				Snapshot:      cur.Snapshot,
 				Metrics:       cur.Metrics,
 				FetchedAt:     cur.FetchedAt,
-				LastCheckedAt: fetchedAt, // atualiza LastCheckedA
+				LastCheckedAt: fetchedAt, // atualiza LastCheckedAt
 			}
 			return domain.Unchanged, false
 		}

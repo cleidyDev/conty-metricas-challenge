@@ -15,10 +15,13 @@ challenge-conty/
 │   ├── clock/              # abstração de tempo (SystemClock + FakeClock)
 │   ├── provider/           # interface do provedor + FakeProvider
 │   ├── store/              # MemoryStore idempotente
-│   ├── sync/               # regra de negócio (SyncService)
-│   └── api/                # handlers HTTP
+│   ├── syncer/             # regra de negócio (SyncService)
+│   └── httpapi/            # handlers HTTP
 └── go.mod
 ```
+
+O nome de cada pasta bate com o do pacote. `syncer` e `httpapi` existem para
+não colidir com `sync` e `net/http` da biblioteca padrão.
 
 ### Princípios
 
@@ -196,8 +199,8 @@ go test -run TestUpsert -v ./internal/store/   # um teste só
 | `domain` | 15 | Contratos JSON, `error` a `omitempty`, `errors.As` sobre os dois erros |
 | `store` | 25 | Tabela `inserted/updated/unchanged/stale`, `conflicts`, totais, concorrência com 100 goroutines |
 | `provider` | 22 | Cenários `ok`/`timeout`/`duplicate`/`rateLimit`, filtro de janela, paginação de 3 páginas |
-| `sync` | 22 | Idempotência, retry, 429, paginação, cancelamento, `PARTIAL`, concorrência |
-| `api` | 11 | Contratos 200/502/400 e rotas Go 1.22 no `ServeMux` real |
+| `syncer` | 22 | Idempotência, retry, 429, paginação, cancelamento, `PARTIAL`, concorrência |
+| `httpapi` | 11 | Contratos 200/502/400 e rotas Go 1.22 no `ServeMux` real |
 
 `server` fica a 0% por ser só wiring (monta as dependências e sobe o `ServeMux`);
 esse mesmo wiring é exercitado nos testes do `api`.
@@ -249,18 +252,22 @@ esse mesmo wiring é exercitado nos testes do `api`.
    execução com `crypto/rand`, para o identificador ser mesmo único.
 4. **Rota com typo** — `GET /metrics/{plataform}/{accountId}` não casava com o
    `r.PathValue("platform")` do handler, portanto a rota devolvia 404.
-5. **Nome do pacote da API** — `package appi` com import aliased; passou a
-   `package api`, alinhado com a pasta.
-6. **Filtro da janela** — estava só no `FakeProvider`, o que não garantia nada
+5. **Nomes das pastas** — a pasta chamava-se `sync` mas o pacote era `syncer`,
+   o que obrigava a alias em todos os imports; e a da API era `api` com
+   `package appi` dentro. Passaram a `syncer` e `httpapi`, com o nome da pasta
+   igual ao do pacote, para não colidir com `sync` e `net/http` da stdlib.
+6. **Versão de Go** — o `go.mod` pedia 1.26.5 sem necessidade; o código usa
+  rotas com path values do Go 1.22, por isso a exigência foi posta em 1.22.
+7. **Filtro da janela** — estava só no `FakeProvider`, o que não garantia nada
    num provider real. Passou também a estar no `syncer`, depois do dedupe e
    antes do `Upsert`.
-7. **Ordem não determinística** — `GetPosts` e `dedupePage` iteravam mapas, pelo
+8. **Ordem não determinística** — `GetPosts` e `dedupePage` iteravam mapas, pelo
    que a ordem dos posts variava entre chamadas; ambos passaram a ordenar.
-8. **Código morto** — removidos um helper JSON nunca usado e um `IsRateLimitError`
+9. **Código morto** — removidos um helper JSON nunca usado e um `IsRateLimitError`
    nunca usado.
-9. **Testes em falta** — repostos e acrescentados testes para 502 em `FAILED`,
-   para o timeout por tentativa, para o teto de backoff, para o filtro de janela
-   e para `GET /metrics`.
+10. **Testes em falta** — repostos e acrescentados testes para 502 em `FAILED`,
+    para o timeout por tentativa, para o teto de backoff, para o filtro de janela
+    e para `GET /metrics`.
 
 ### O que não está feito
 

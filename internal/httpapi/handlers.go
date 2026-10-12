@@ -1,9 +1,9 @@
-package api
+package httpapi
 
 import (
 	"conty-challenge/internal/domain"
 	"conty-challenge/internal/store"
-	syncer "conty-challenge/internal/sync"
+	"conty-challenge/internal/syncer"
 	"encoding/json"
 	"io"
 	"log/slog"
